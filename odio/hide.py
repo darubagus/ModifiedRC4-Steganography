@@ -6,14 +6,11 @@ import wave
 def decimal2Binary(number):
     return bin(number).replace("0b","")
 
-def generateSeed(Key):
-    seed = 0
-    for i in range(len(Key)):
-        seed += ord(Key[i])
-    
-    return seed
 
-def _hide(audio_path, msg_path, dest, Key, isEncrypted):
+def count_seed(stego_key):
+    return sum([ord(i) for i in range(stego_key)])
+
+def _hide(audio_path, msg_path, dest, isEncrypted):
     
     # Opening audio file
     with wave.open(audio_path, "rb") as ori_wav:
@@ -73,7 +70,7 @@ def _hide(audio_path, msg_path, dest, Key, isEncrypted):
 
         # Insert message content
         if (not(isEncrypted)): #then sequential
-            for i in range(25,len(bin_message+25)):
+            for i in range(25,len(bin_message)+25):
                 if ((temp[i]%2 == 0) and (bin_message[i-25] == '1')):
                     temp[i] += 1
                 elif ((temp[i]%2 == 1) and (bin_message[i-25] == '0')):
@@ -97,3 +94,25 @@ def _hide(audio_path, msg_path, dest, Key, isEncrypted):
             stegoFile.writeframes(stegoFrames)
         print("\nPesan berhasil disembunyikan")
 
+def main():
+    choice = int(input("1. Sequential\n2.Random\n"))
+    if (choice==1):
+        isEncrypted = False
+        audio_path =  'original/contho.wav' #"original/"+input("masukkan nama file asli:")+'.wav'
+        message_path = 'msg/msg.txt' #'msg/'+input("Masukkan nama file pesan:") + '.txt'
+        dest = 'stego/hasil.wav' #'stego/' + input("Masukkan nama file wav stegano:") + '.wav'
+    elif (choice==2):
+        isEncrypted = True
+        audio_path = "original/"+input("masukkan nama file asli:")+'.wav'
+        message_path = 'msg/'+input("Masukkan nama file pesan:") + '.txt'
+        dest = 'stego/' + input("Masukkan nama file wav stegano:") + '.wav'
+        Key = input("masukkan key: ")
+        seed = count_seed(Key)
+    else:
+        choice = int(input("1. Sequential\n2.Random\n"))
+
+    _hide(audio_path, message_path, dest, isEncrypted)
+
+
+if __name__ == '__main__':
+    main()
