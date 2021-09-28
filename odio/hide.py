@@ -6,7 +6,6 @@ import wave
 def decimal2Binary(number):
     return bin(number).replace("0b","")
 
-
 def count_seed(stego_key):
     return sum([ord(i) for i in range(stego_key)])
 
