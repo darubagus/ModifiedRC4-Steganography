@@ -8,15 +8,16 @@
 
 key = None
 
-def acquire_key():
+def acquire_key(input_key):
     global key
-    while key == None:
-        key = input("Input key: \n>>> ")
+    key = input_key
+    # while key == None:
+    #     key = input("Input key: \n>>> ")
     
     # convert key to binary
     # key = "".join(str_to_strbinaries(key))
 
-def xor_message(message: str, keystream: list[int]) -> str:
+def xor_message(message: str, keystream) -> str:
     """
         [DESC]
             menglakukan XOR antara message (string) dengan keystream list of integer 0-255
@@ -24,15 +25,14 @@ def xor_message(message: str, keystream: list[int]) -> str:
     result = ""
     n_keystream = len(keystream)
     message_ints = str_to_binaries(message)
-    print(f"message_ints: {message_ints}")
     for idx in range(len(message_ints)):
         result += chr(message_ints[idx] ^ keystream[idx%n_keystream])
     return result
 
-def str_to_binaries(input_text: str) -> list[int]:
+def str_to_binaries(input_text: str) :
     return [ord(char) for char in input_text]
 
-def str_to_strbinaries(input_text: str) -> list[str]:
+def str_to_strbinaries(input_text: str) :
     temp = [bin(bits)[2:] for bits in [ord(char) for char in input_text]]
     result = []
     for e in temp:
@@ -61,14 +61,11 @@ def feistel(input_message: str, input_key: str, encrypt: bool, num_of_steps: int
         n_key_part = n_key//num_of_steps
     subpart1 = input_message[:n_message_part]
     subpart2 = input_message[n_message_part:]
-    print(input_key)
 
     if encrypt:
         for i in range(num_of_steps):
             subkey_i = input_key[i*n_key_part:(i+1)*n_key_part]
             keystream_i = lfsr_txt(subpart2, subkey_i)
-            print(f"Subkey {i}: {subkey_i}")
-            # print(f"Keystream {i}: {keystream_i}")
             func_result = xor_message(subpart2, keystream_i)
             xor_result = xor_message(subpart1, str_to_binaries(func_result))
             
@@ -77,8 +74,6 @@ def feistel(input_message: str, input_key: str, encrypt: bool, num_of_steps: int
         for i in range(num_of_steps)[::-1]:
             subkey_i = input_key[i*n_key_part:(i+1)*n_key_part]
             keystream_i = lfsr_txt(subpart2, subkey_i)
-            print(f"Subkey {i}: {subkey_i}")
-            # print(f"Keystream {i}: {keystream_i}")
             func_result = xor_message(subpart2, keystream_i)
             xor_result = xor_message(subpart1, str_to_binaries(func_result))
             
@@ -88,7 +83,7 @@ def feistel(input_message: str, input_key: str, encrypt: bool, num_of_steps: int
 
     return subpart1 + subpart2
 
-def lfsr_txt(input_message: str, subkey: str) -> list[int]:
+def lfsr_txt(input_message: str, subkey: str):
     """
         [DESC]
             Berdasarkan algoritma Linear Shift register Key:
@@ -99,7 +94,7 @@ def lfsr_txt(input_message: str, subkey: str) -> list[int]:
         [RETURN]
             keystream yang siap di-XOR-kan untuk mengenkripsi input_message
     """
-    def xor_bits(bits: list[int]):
+    def xor_bits(bits):
         result = 0
         for bit in bits:
             result ^= bit
@@ -122,21 +117,23 @@ def lfsr_txt(input_message: str, subkey: str) -> list[int]:
 
 def readfile_txt(filename: str = "plaintext.txt"):
     from pathlib import Path
-    path = Path(__file__).parent / f"dump/{filename}"
+    # path = Path(__file__).parent / f"../{filename}"
+    path = filename
     
     with open(path, "r") as file:
         return file.readlines()
 
 def writefile_txt(filename: str="output.txt", content:str=""):
     from pathlib import Path
-    path = Path(__file__).parent / f"dump/{filename}"
+    # path = Path(__file__).parent / f"../{filename}"
+    path = filename
 
     with open(path, 'wb') as file:
         file.write(content)
 
 def readfile_bin(filename: str = "blue.png"):
     from pathlib import Path
-    path = Path(__file__).parent / f"dump/{filename}"
+    path = filename
     
     with open(path, 'rb') as file:
         temp = []
@@ -144,19 +141,18 @@ def readfile_bin(filename: str = "blue.png"):
             temp.append(int.from_bytes(byte, "big"))
         
         temp = [bin(bits)[2:] for bits in temp]
-        print(f"temp: {temp}")
         result = []
         for e in temp:
             if len(e) < 8:
                 e = (8 - len(e)) * "0" + e
             result.append(e)
-        print(f"result: {result}")
         
         return "".join([chr(int(e, 2)) for e in result])
 
 def writefile_bin(filename: str="output.png", content: str=""):
     from pathlib import Path
-    path = Path(__file__).parent / f"dump/{filename}"
+    # path = Path(__file__).parent / f"../{filename}"
+    path = filename
     
     with open(path, 'wb') as file:
         bytes = []
@@ -165,7 +161,8 @@ def writefile_bin(filename: str="output.png", content: str=""):
             bytes.append(byte)
         file.write(b"".join(bytes))
 
-def initializeS(key: str) -> list[int]:
+def initializeS():
+    global key
     key = str_to_strbinaries(key)
     temp = [i for i in range(256)]
     lk = len(key)
@@ -175,7 +172,8 @@ def initializeS(key: str) -> list[int]:
         temp[i], temp[j] = temp[j], temp[i]
     return temp
 
-def encrypt_text(P: str, S: list[int]) -> str:
+def encrypt_text(P: str) -> str:
+    S = initializeS()
     i = j = 0
     C = ""
     for idx in range(len(P)):
@@ -192,7 +190,8 @@ def encrypt_text(P: str, S: list[int]) -> str:
     C = feistel(C, str_to_strbinaries(key), True)
     return C
 
-def decrypt_text(C: str, S: list[int]) -> str:
+def decrypt_text(C: str) -> str:
+    S = initializeS()
     # Feistel here
     global key
     C = feistel(C, str_to_strbinaries(key), False)

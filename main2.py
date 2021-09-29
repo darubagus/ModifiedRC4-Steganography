@@ -7,6 +7,7 @@ from odio.encodeOO import EncodeAudio
 from odio.decodeOO import DecodeAudio
 from odio.ioFile import File
 from odio.PSNR import psnr
+from mrc4.mrc4 import *
 import cv2
 
 #---------------------------------UTILITIES---------------------------------
@@ -20,6 +21,7 @@ class HomeScreen(QDialog):
         super(HomeScreen, self).__init__()
         loadUi("UI/main.ui", self)
 
+        self.pushButton.clicked.connect(self.goToRC4)
         self.pushButton_2.clicked.connect(self.goToImage)
         self.pushButton_3.clicked.connect(self.goToAudio)
 
@@ -32,6 +34,12 @@ class HomeScreen(QDialog):
         audio = AudioScreen()
         widget.addWidget(audio)
         widget.setCurrentIndex(widget.currentIndex()+1)
+
+    def goToRC4(self):
+        rc4 = RC4Screen()
+        widget.addWidget(rc4)
+        widget.setCurrentIndex(widget.currentIndex()+1)
+    
 
 #---------------------------------IMAGE---------------------------------
 class ImageScreen(QDialog):
@@ -421,6 +429,167 @@ class AudioResultScreen(QDialog):
         super(AudioResultScreen, self).__init__()
         loadUi("UI/audio/audio-result.ui", self)
         self.label.setText((_mode+"d").capitalize())
+        self.fileNameLabel.setText(_resultFileName)
+        self.psnrLabel.setText(_psnr)
+
+        #actions
+        self.goButton.clicked.connect(self.goToHome)
+
+    def goToHome(self):
+        for i in range(3):
+            goBack()
+
+#---------------------------------RC4---------------------------------
+
+class RC4Screen(QDialog):
+    def __init__(self):
+        super(RC4Screen, self).__init__()
+        loadUi("UI/RC4/rc4-main.ui", self)
+
+        self.pushButton.clicked.connect(self.goToRC4Encrypt)
+        self.pushButton_2.clicked.connect(self.goToRC4Decrypt)
+        self.backButton.clicked.connect(goBack)
+
+    def goToRC4Encrypt(self):
+        rc1 = RC4EncryptScreen()
+        widget.addWidget(rc1)
+        widget.setCurrentIndex(widget.currentIndex() + 1)
+
+    def goToRC4Decrypt(self):
+        rc1 = RC4DecryptScreen()
+        widget.addWidget(rc1)
+        widget.setCurrentIndex(widget.currentIndex() + 1)
+class RC4EncryptScreen(QDialog):
+    def __init__(self):
+        super(RC4EncryptScreen, self).__init__()
+        loadUi("UI/RC4/rc4-encrypt.ui", self)
+        self.mode = "encrypt"
+        self.message = ""
+        self.outputPath = ""
+        self.key = ""
+
+        #actions
+        self.inputButton_1.toggled.connect(self.toggleInputButton1)
+        self.inputButton_2.toggled.connect(self.toggleInputButton2)
+        self.inputFileButton.clicked.connect(self.browseInput)
+        self.goButton.clicked.connect(self.runEncoding)
+        self.backButton.clicked.connect(goBack)
+
+    def browseInput(self):
+        f = QFileDialog.getOpenFileName(self, 'Open file', '~/shifa/Desktop')
+        self.inputFileField.setText(f[0])
+
+    def toggleInputButton1(self): self.btnInputState(self.inputButton_1)
+    def toggleInputButton2(self): self.btnInputState(self.inputButton_2)
+
+    def btnInputState(self, b):
+        if b.text() == "File":
+            if b.isChecked():
+                self.inputKeyboardField.setReadOnly(True)
+                self.inputFileButton.setEnabled(True)
+                self.fileInputMethod = "File"
+                self.inputKeyboardField.setText("")
+        elif b.text() == "Keyboard":
+            if b.isChecked():
+                self.inputKeyboardField.setReadOnly(False)
+                self.inputFileButton.setEnabled(False)
+                self.fileInputMethod = "Keyboard"
+                self.inputFileField.setText("")
+
+    def getMessage(self):
+        if (self.fileInputMethod == "File"):
+            path = self.inputFileField.text()
+            self.message = readfile_bin(path)
+        else:
+            self.message = self.inputKeyboardField.text()
+
+    def getOutputPath(self):
+        self.outputPath = "output_encode/" + self.outputFileField.text() + "." + self.outputFormatField.text()
+
+    def runEncoding(self):
+        self.getMessage()
+        self.getOutputPath()
+        self.key = self.stegoKeyField.text()
+        acquire_key(self.key)
+        result = encrypt_text(self.message)
+        writefile_bin(self.outputPath, result)
+
+        self.gotToResult()
+
+    def gotToResult(self):
+        filename = self.outputFileField.text() + "." + self.outputFormatField.text()
+        result = ImageResultScreen(self.mode, filename, "")
+        widget.addWidget(result)
+        widget.setCurrentIndex(widget.currentIndex() + 1)
+
+class RC4DecryptScreen(QDialog):
+    def __init__(self):
+        super(RC4DecryptScreen, self).__init__()
+        loadUi("UI/RC4/rc4-decrypt.ui", self)
+        self.mode = "decrypt"
+        self.message = ""
+        self.outputPath = ""
+        self.key = ""
+
+        #actions
+        self.inputButton_1.toggled.connect(self.toggleInputButton1)
+        self.inputButton_2.toggled.connect(self.toggleInputButton2)
+        self.inputFileButton.clicked.connect(self.browseInput)
+        self.goButton.clicked.connect(self.runDecoding)
+        self.backButton.clicked.connect(goBack)
+
+    def browseInput(self):
+        f = QFileDialog.getOpenFileName(self, 'Open file', '~/shifa/Desktop')
+        self.inputFileField.setText(f[0])
+
+    def toggleInputButton1(self): self.btnInputState(self.inputButton_1)
+    def toggleInputButton2(self): self.btnInputState(self.inputButton_2)
+
+    def btnInputState(self, b):
+        if b.text() == "File":
+            if b.isChecked():
+                self.inputKeyboardField.setReadOnly(True)
+                self.inputFileButton.setEnabled(True)
+                self.fileInputMethod = "File"
+                self.inputKeyboardField.setText("")
+        elif b.text() == "Keyboard":
+            if b.isChecked():
+                self.inputKeyboardField.setReadOnly(False)
+                self.inputFileButton.setEnabled(False)
+                self.fileInputMethod = "Keyboard"
+                self.inputFileField.setText("")
+
+    def getMessage(self):
+        if (self.fileInputMethod == "File"):
+            path = self.inputFileField.text()
+            self.message = readfile_bin(path)
+        else:
+            self.message = self.inputKeyboardField.text()
+
+    def getOutputPath(self):
+        self.outputPath = "output_decode/" + self.outputFileField.text() + "." + self.outputFormatField.text()
+
+    def runDecoding(self):
+        self.getMessage()
+        self.getOutputPath()
+        self.key = self.stegoKeyField.text()
+        acquire_key(self.key)
+        result = decrypt_text(self.message)
+        writefile_bin(self.outputPath, result)
+
+        self.gotToResult()
+
+    def gotToResult(self):
+        filename = self.outputFileField.text() + "." + self.outputFormatField.text()
+        result = ImageResultScreen(self.mode, filename, "")
+        widget.addWidget(result)
+        widget.setCurrentIndex(widget.currentIndex() + 1)
+
+class RC4ResultScreen(QDialog):
+    def __init__(self, _mode, _resultFileName, _psnr):
+        super(RC4ResultScreen, self).__init__()
+        loadUi("UI/RC4/rc4-result.ui", self)
+        self.label.setText((_mode+"ed").capitalize())
         self.fileNameLabel.setText(_resultFileName)
         self.psnrLabel.setText(_psnr)
 
