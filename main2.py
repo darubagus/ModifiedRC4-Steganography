@@ -397,14 +397,17 @@ class AudioDecodeScreen(QDialog):
 
         # decode(self.vesselPath, self.outputFileField.text(), self.outputFormatField.text(), self.random, self.seed)
         self.decodeAudio = DecodeAudio(self.vesselPath, self.seed)
-        self.decodeAudio.decode()
-        self.decodeAudio.parseMsg()
+        # self.decodeAudio.decode()
+        # self.decodeAudio.parseMsg()
         print("All decoded")
         self.gotToResult()
 
     def gotToResult(self):
+        self.decodeAudio.decode()
+        self.decodeAudio.parseMsg()
         filename = self.outputFileField.text() + "." + self.decodeAudio.extension
         path = 'output_decode/' + filename
+        
         byte = self.decodeAudio.getDecodedMsg()
         output = File(path)
         output.writeFile(byte)
