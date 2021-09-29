@@ -1,9 +1,5 @@
-def countSeed(key):
-    tot = 0
-    for i in key:
-        tot += ord(i)
-    return tot    
+iot = 010100001010100111001101011101000111111
 
-key = 'anakayam'
+char = chr(int(iot,2))
 
-print(countSeed(key))
+print(char)
