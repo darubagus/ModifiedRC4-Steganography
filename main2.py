@@ -7,6 +7,7 @@ from odio.encodeOO import EncodeAudio
 from odio.decodeOO import DecodeAudio
 from odio.ioFile import File
 from odio.PSNR import psnr
+import cv2
 
 #---------------------------------UTILITIES---------------------------------
 def goBack():
@@ -136,12 +137,17 @@ class ImageEncodeScreen(QDialog):
         self.getRandom()
 
         encode(self.message, self.vesselPath, self.outputPath, self.random, self.seed)
-        self.gotToResult()
 
-    def gotToResult(self):
+        original = cv2.imread(self.vesselPath)
+        compressed = cv2.imread(self.outputPath, 1)
+        psnrValue = PSNR(original, compressed)
+
+        self.gotToResult(psnrValue)
+
+    def gotToResult(self, _psnr):
         filename = self.outputFileField.text() + "." + self.outputFormatField.text()
-        pnsr = "PSNR: Belom buat"
-        result = ImageResultScreen(self.mode, filename, pnsr)
+        psnrValue = "PSNR: " + str(_psnr) + " dB"
+        result = ImageResultScreen(self.mode, filename, psnrValue)
         widget.addWidget(result)
         widget.setCurrentIndex(widget.currentIndex() + 1)
 
