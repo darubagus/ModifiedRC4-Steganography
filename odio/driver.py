@@ -2,6 +2,7 @@ from base64 import encode
 from encodeOO import EncodeAudio
 from decodeOO import DecodeAudio
 from ioFile import File
+from PSNR import psnr
 
 
 def EncodeStart():
@@ -77,5 +78,5 @@ def DecodeStart():
         output.writeFile(byte)
 
 
-# EncodeStart()
-DecodeStart()
+EncodeStart()
+# DecodeStart()

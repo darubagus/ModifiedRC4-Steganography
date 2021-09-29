@@ -1,7 +1,7 @@
 import wave
 import random
 import base64
-from ioFile import File
+from odio.ioFile import File
 
 class EncodeAudio:
     def __init__(self, filePath, messagePath, key):
