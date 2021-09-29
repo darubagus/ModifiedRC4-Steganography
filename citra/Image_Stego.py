@@ -19,7 +19,7 @@ def file2bin(path):
 
 #Save File
 def savefile(content, filename, ext):
-    path = filename + "." + ext
+    path = "output_decode/" + filename + "." + ext
     file = open(path, 'wb')
     file.write(content)
     file.close 
@@ -154,5 +154,5 @@ def startDecode():
 
 
 #TESTING
-startEncode()
-startDecode()
+# startEncode()
+# startDecode()
