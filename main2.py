@@ -352,6 +352,7 @@ class AudioDecodeScreen(QDialog):
         self.outputPath = ""
         self.random = False
         self.seed = 0
+        self.decodeAudio = ""
 
         #actions
         self.vesselButton.clicked.connect(self.browseVessel)
