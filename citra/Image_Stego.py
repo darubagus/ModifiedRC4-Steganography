@@ -1,6 +1,7 @@
 import struct
 import numpy as np
 from PIL import Image
+from math import log10, sqrt
 
 #---------------------------UTILITIES----------------------------
 
@@ -19,7 +20,7 @@ def file2bin(path):
 
 #Save File
 def savefile(content, filename, ext):
-    path = filename + "." + ext
+    path = "output_decode/" + filename + "." + ext
     file = open(path, 'wb')
     file.write(content)
     file.close 
@@ -44,6 +45,15 @@ def imgSize(img):
 
     total_pixels = array.size//n
     return (total_pixels, n)
+
+
+def PSNR(original, compressed):
+    mse = np.mean((original - compressed) ** 2)
+    if (mse == 0):
+        return 100
+    max_pixel = 255.0
+    psnr = 20 * log10(max_pixel / sqrt(mse))
+    return psnr
 
 def generatePxOrder(imgSize, random, *s):
     if (random): 
@@ -154,5 +164,5 @@ def startDecode():
 
 
 #TESTING
-startEncode()
-startDecode()
+# startEncode()
+# startDecode()
