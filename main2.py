@@ -508,7 +508,7 @@ class RC4EncryptScreen(QDialog):
 
     def gotToResult(self):
         filename = self.outputFileField.text() + "." + self.outputFormatField.text()
-        result = ImageResultScreen(self.mode, filename, "")
+        result = RC4ResultScreen(self.mode, filename, "")
         widget.addWidget(result)
         widget.setCurrentIndex(widget.currentIndex() + 1)
 
@@ -571,7 +571,7 @@ class RC4DecryptScreen(QDialog):
 
     def gotToResult(self):
         filename = self.outputFileField.text() + "." + self.outputFormatField.text()
-        result = ImageResultScreen(self.mode, filename, "")
+        result = RC4ResultScreen(self.mode, filename, "")
         widget.addWidget(result)
         widget.setCurrentIndex(widget.currentIndex() + 1)
 
