@@ -13,10 +13,13 @@ Semester I Tahun 2021/2022
 * Image & Audio Steganography using LSB
 
 ## Screenshots
-![Example screenshot](./src/data/img/affine-encrypt.png)
-![Example screenshot](./src/data/img/affine-decrypt.png)
-![Example screenshot](./src/data/img/playfair-encrypt.png)
-![Example screenshot](./src/data/img/playfair-decrypt.png)
+![Main_Screen](./img/main.png)
+![image_encode](./img/image_encode.png)
+![image_decode](./img/image_decode.png)
+![encoded_result](./img/result.png)
+![decoded_result](./img/decoded_result.png)
+![original](./img/original.bmp)
+![encoded](./img/sample.bmp)
 
 ## Technologies
 * Python - version 3.8.3
