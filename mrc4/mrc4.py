@@ -1,9 +1,9 @@
 """
     Schema:
-        Menggunakan algoritma RC4:
+        Menggunakan algoritma RC4 dan Feistel:
         1. KSA: Menginisiasi S, yakni array dengan permutasi nilai 0-255
         2. PRGA: ...
-        3. Feistel (DES)
+        3. Feistel
 """
 
 key = None
@@ -16,7 +16,7 @@ def acquire_key():
     # convert key to binary
     # key = "".join(str_to_strbinaries(key))
 
-def xor_message(message: str, keystream: list[int]) -> str:
+def xor_message(message: str, keystream) -> str:
     """
         [DESC]
             menglakukan XOR antara message (string) dengan keystream list of integer 0-255
@@ -24,15 +24,19 @@ def xor_message(message: str, keystream: list[int]) -> str:
     result = ""
     n_keystream = len(keystream)
     message_ints = str_to_binaries(message)
-    print(f"message_ints: {message_ints}")
     for idx in range(len(message_ints)):
         result += chr(message_ints[idx] ^ keystream[idx%n_keystream])
     return result
 
-def str_to_binaries(input_text: str) -> list[int]:
+def str_to_binaries(input_text: str):
     return [ord(char) for char in input_text]
 
-def str_to_strbinaries(input_text: str) -> list[str]:
+def str_to_strbinaries(input_text: str):
+    """
+        Converts string to its binary representation
+        Example:
+        'abcd' --> '01100001011000100110001101100100'
+    """
     temp = [bin(bits)[2:] for bits in [ord(char) for char in input_text]]
     result = []
     for e in temp:
@@ -47,13 +51,14 @@ def feistel(input_message: str, input_key: str, encrypt: bool, num_of_steps: int
         [DESC]
             Melakukan enkripsi dengan Feistel Network menggunakan fungsi
             f(S, M) = S ^ M, di mana S adalah subkey dan M adalah message.
-            Dilakukan sebanyak num_of_steps
+            Subkey S ke-i merupakan substring ke-i dari key
+            Dilakukan sebanyak num_of_steps (jangan assign nilainya dengan bil. genap, somehow error wkwkw)
         [PARAMS]
             input_message: str  { pesan yang akan dienkripsi }
             input_key: str  { key yang digunakan untuk enkripsi, dalam binary representation }
             num_of_steps: int  { banyak round yang dilakukan }
         [RETURN]
-            Hasil enkripsi
+            Hasil enkripsi Feistel
     """
     n_message_part = len(input_message)//2
     n_key = len(input_key)
@@ -65,21 +70,29 @@ def feistel(input_message: str, input_key: str, encrypt: bool, num_of_steps: int
 
     if encrypt:
         for i in range(num_of_steps):
+            # get the i-th subkey, i.e. the i-th substring of key
             subkey_i = input_key[i*n_key_part:(i+1)*n_key_part]
+
+            # function f(subkey_i, subpart2)
+            # generate keystream for subpart 2, then XOR
             keystream_i = lfsr_txt(subpart2, subkey_i)
-            print(f"Subkey {i}: {subkey_i}")
-            # print(f"Keystream {i}: {keystream_i}")
             func_result = xor_message(subpart2, keystream_i)
+
+            # XOR the result with subpart1
             xor_result = xor_message(subpart1, str_to_binaries(func_result))
             
             subpart1, subpart2 = subpart2, xor_result
     else:
         for i in range(num_of_steps)[::-1]:
+            # get the i-th subkey, i.e. the i-th substring of key
             subkey_i = input_key[i*n_key_part:(i+1)*n_key_part]
+
+            # function f(subkey_i, subpart2)
+            # generate keystream for subpart 2, then XOR
             keystream_i = lfsr_txt(subpart2, subkey_i)
-            print(f"Subkey {i}: {subkey_i}")
-            # print(f"Keystream {i}: {keystream_i}")
             func_result = xor_message(subpart2, keystream_i)
+
+            # XOR the result with subpart1
             xor_result = xor_message(subpart1, str_to_binaries(func_result))
             
             subpart1, subpart2 = subpart2, xor_result
@@ -88,7 +101,7 @@ def feistel(input_message: str, input_key: str, encrypt: bool, num_of_steps: int
 
     return subpart1 + subpart2
 
-def lfsr_txt(input_message: str, subkey: str) -> list[int]:
+def lfsr_txt(input_message: str, subkey: str):
     """
         [DESC]
             Berdasarkan algoritma Linear Shift register Key:
@@ -99,7 +112,7 @@ def lfsr_txt(input_message: str, subkey: str) -> list[int]:
         [RETURN]
             keystream yang siap di-XOR-kan untuk mengenkripsi input_message
     """
-    def xor_bits(bits: list[int]):
+    def xor_bits(bits):
         result = 0
         for bit in bits:
             result ^= bit
@@ -121,6 +134,9 @@ def lfsr_txt(input_message: str, subkey: str) -> list[int]:
 
 
 def readfile_txt(filename: str = "plaintext.txt"):
+    """
+        Reads file and return the content (string)
+    """
     from pathlib import Path
     path = Path(__file__).parent / f"dump/{filename}"
     
@@ -128,6 +144,9 @@ def readfile_txt(filename: str = "plaintext.txt"):
         return file.readlines()
 
 def writefile_txt(filename: str="output.txt", content:str=""):
+    """
+        Writes content (string) to file
+    """
     from pathlib import Path
     path = Path(__file__).parent / f"dump/{filename}"
 
@@ -135,6 +154,9 @@ def writefile_txt(filename: str="output.txt", content:str=""):
         file.write(content)
 
 def readfile_bin(filename: str = "blue.png"):
+    """
+        Reads file and return the content (binary)
+    """
     from pathlib import Path
     path = Path(__file__).parent / f"dump/{filename}"
     
@@ -155,6 +177,9 @@ def readfile_bin(filename: str = "blue.png"):
         return "".join([chr(int(e, 2)) for e in result])
 
 def writefile_bin(filename: str="output.png", content: str=""):
+    """
+        Writes contents (binary) into file
+    """
     from pathlib import Path
     path = Path(__file__).parent / f"dump/{filename}"
     
@@ -165,7 +190,11 @@ def writefile_bin(filename: str="output.png", content: str=""):
             bytes.append(byte)
         file.write(b"".join(bytes))
 
-def initializeS(key: str) -> list[int]:
+def initializeS(key: str):
+    """
+        Initializes array S for RC4 algorithm
+        S is a permutation of the list containing the numbers 0-255
+    """
     key = str_to_strbinaries(key)
     temp = [i for i in range(256)]
     lk = len(key)
@@ -175,7 +204,17 @@ def initializeS(key: str) -> list[int]:
         temp[i], temp[j] = temp[j], temp[i]
     return temp
 
-def encrypt_text(P: str, S: list[int]) -> str:
+def encrypt_text(P: str, S) -> str:
+    """
+        [DESC]
+            Encrypt a plaintext P with respect to the permutation array S, according to the RC4 algorithm
+            Then, the result is encrypted with Feister algorithm
+        [PARAMS]
+            P: str          { the plaintext to be encrypted }
+            S: list[int]    { permutation array }
+        [RETURN]
+            Ciphertext as the result of RC4 and then Feister
+    """
     i = j = 0
     C = ""
     for idx in range(len(P)):
@@ -192,7 +231,17 @@ def encrypt_text(P: str, S: list[int]) -> str:
     C = feistel(C, str_to_strbinaries(key), True)
     return C
 
-def decrypt_text(C: str, S: list[int]) -> str:
+def decrypt_text(C: str, S) -> str:
+    """
+        [DESC]
+            Decrypt the ciphertext with Feister algorithm
+            Then, the result is decrypted with respect to the permutation array S, according to the RC4 algorithm
+        [PARAMS]
+            C: str          { the ciphertext to be decrypted }
+            S: list[int]    { permutation array }
+        [RETURN]
+            Plaintext as the result of Feister and then RC4
+    """
     # Feistel here
     global key
     C = feistel(C, str_to_strbinaries(key), False)
