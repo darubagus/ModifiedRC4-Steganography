@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="59e91331-7a3f-49c8-9383-c1aef535488f" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/citra/Image_Stego.py" beforeDir="false" afterPath="$PROJECT_DIR$/citra/Image_Stego.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UI/image/image-decode.ui" beforeDir="false" afterPath="$PROJECT_DIR$/UI/image/image-decode.ui" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UI/image/image-encode.ui" beforeDir="false" afterPath="$PROJECT_DIR$/UI/image/image-encode.ui" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main2.py" beforeDir="false" afterPath="$PROJECT_DIR$/main2.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

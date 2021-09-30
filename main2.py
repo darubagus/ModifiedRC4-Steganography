@@ -136,7 +136,7 @@ class ImageEncodeScreen(QDialog):
     def getRandom(self):
         if self.insButton_2.isChecked():
             self.random = True
-            self.seed = int(self.stegoKeyField.text())
+            self.seed = (int(''.join(map(str, map(ord, self.stegoKeyField.text()))))) % (2**32 - 1)
 
 
     def runEncoding(self):
@@ -172,8 +172,6 @@ class ImageDecodeScreen(QDialog):
 
         #actions
         self.vesselButton.clicked.connect(self.browseVessel)
-        self.insButton_1.clicked.connect(self.toggleInsButton1)
-        self.insButton_2.clicked.connect(self.toggleInsButton2)
         self.goButton.clicked.connect(self.runDecoding)
         self.backButton.clicked.connect(goBack)
 
@@ -181,9 +179,6 @@ class ImageDecodeScreen(QDialog):
         f = QFileDialog.getOpenFileName(self, 'Open file', '~/shifa/Desktop', '*.png *.bmp')
         self.vesselField.setText(f[0])
         self.vesselPath = f[0]
-
-    def toggleInsButton1(self): self.btnInsertionState(self.insButton_1)
-    def toggleInsButton2(self): self.btnInsertionState(self.insButton_2)
 
     def btnInsertionState(self, b):
         if b.text() == "Sequential":
@@ -195,9 +190,9 @@ class ImageDecodeScreen(QDialog):
                 self.stegoKeyField.setReadOnly(False)
 
     def getRandom(self):
-        if self.insButton_2.isChecked():
+        if self.stegoKeyField.text() != "":
             self.random = True
-            self.seed = int(self.stegoKeyField.text())
+            self.seed = (int(''.join(map(str, map(ord, self.stegoKeyField.text()))))) % (2**32 - 1)
 
     def runDecoding(self):
         self.getRandom()
@@ -370,8 +365,6 @@ class AudioDecodeScreen(QDialog):
 
         #actions
         self.vesselButton.clicked.connect(self.browseVessel)
-        self.insButton_1.clicked.connect(self.toggleInsButton1)
-        self.insButton_2.clicked.connect(self.toggleInsButton2)
         self.goButton.clicked.connect(self.runDecoding)
         self.backButton.clicked.connect(goBack)
 
@@ -379,9 +372,6 @@ class AudioDecodeScreen(QDialog):
         f = QFileDialog.getOpenFileName(self, 'Open file', '~/darubagus/Desktop', '*.wav')
         self.vesselField.setText(f[0])
         self.vesselPath = f[0]
-
-    def toggleInsButton1(self): self.btnInsertionState(self.insButton_1)
-    def toggleInsButton2(self): self.btnInsertionState(self.insButton_2)
 
     def btnInsertionState(self, b):
         if b.text() == "Sequential":
@@ -393,7 +383,7 @@ class AudioDecodeScreen(QDialog):
                 self.stegoKeyField.setReadOnly(False)
 
     def getRandom(self):
-        if self.insButton_2.isChecked():
+        if self.stegoKeyField.text() != "":
             self.random = True
             self.seed = self.stegoKeyField.text()
         else :
