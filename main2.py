@@ -73,6 +73,7 @@ class ImageEncodeScreen(QDialog):
         self.fileInputMethod = ""
         self.outputPath = ""
         self.random = False
+        self.encrypt = False
         self.seed = 0
 
         #actions
@@ -82,6 +83,8 @@ class ImageEncodeScreen(QDialog):
         self.inputFileButton.clicked.connect(self.browseInput)
         self.insButton_1.clicked.connect(self.toggleInsButton1)
         self.insButton_2.clicked.connect(self.toggleInsButton2)
+        self.encButton_1.clicked.connect(self.toggleEncButton1)
+        self.encButton_2.clicked.connect(self.toggleEncButton2)
         self.goButton.clicked.connect(self.runEncoding)
         self.backButton.clicked.connect(goBack)
 
@@ -98,6 +101,8 @@ class ImageEncodeScreen(QDialog):
     def toggleInputButton2(self): self.btnInputState(self.inputButton_2)
     def toggleInsButton1(self): self.btnInsertionState(self.insButton_1)
     def toggleInsButton2(self): self.btnInsertionState(self.insButton_2)
+    def toggleEncButton1(self): self.btnEncryptionState(self.encButton_1)
+    def toggleEncButton2(self): self.btnEncryptionState(self.encButton_2)
 
     def btnInputState(self, b):
         if b.text() == "File":
@@ -121,6 +126,17 @@ class ImageEncodeScreen(QDialog):
         elif b.text() == "Random":
             if b.isChecked():
                 self.stegoKeyField.setReadOnly(False)
+    
+    def btnEncryptionState(self, b):
+        if b.text() == "Yes":
+            if b.isChecked():
+                self.encrypt = True
+    
+    def encryptMessage(self):
+        if self.encrypt:
+            acquire_key(self.stegoKeyField.text())
+            print(f"Key: {self.stegoKeyField.text()}")
+            self.message = cr4_encrypt_message(self.message)
 
     def getBinaryMessage(self):
         if (self.fileInputMethod == "File"):
@@ -141,6 +157,7 @@ class ImageEncodeScreen(QDialog):
 
     def runEncoding(self):
         self.getBinaryMessage()
+        self.encryptMessage()
         self.getOutputPath()
         self.getRandom()
 
@@ -168,17 +185,34 @@ class ImageDecodeScreen(QDialog):
         self.vesselPath = ""
         self.outputPath = ""
         self.random = False
+        self.decrypt = False
         self.seed = 0
 
         #actions
         self.vesselButton.clicked.connect(self.browseVessel)
         self.goButton.clicked.connect(self.runDecoding)
         self.backButton.clicked.connect(goBack)
+        self.encButton_1.clicked.connect(self.toggleEncButton1)
+        self.encButton_2.clicked.connect(self.toggleEncButton2)
 
     def browseVessel(self):
         f = QFileDialog.getOpenFileName(self, 'Open file', '~/shifa/Desktop', '*.png *.bmp')
         self.vesselField.setText(f[0])
         self.vesselPath = f[0]
+    
+    def toggleEncButton1(self): self.btnEncryptionState(self.encButton_1)
+    def toggleEncButton2(self): self.btnEncryptionState(self.encButton_2)
+
+    def btnEncryptionState(self, b):
+        if b.text() == "Yes":
+            if b.isChecked():
+                self.decrypt = True
+    
+    def decryptMessage(self):
+        if self.decrypt:
+            acquire_key(self.stegoKeyField.text())
+            # Decrypt output file
+            cr4_decrypt_file(self.outputFileField.text(), self.outputFormatField.text())
 
     def btnInsertionState(self, b):
         if b.text() == "Sequential":
@@ -198,6 +232,7 @@ class ImageDecodeScreen(QDialog):
         self.getRandom()
 
         decode(self.vesselPath, self.outputFileField.text(), self.outputFormatField.text(), self.random, self.seed)
+        self.decryptMessage()
         print("All decoded")
         self.gotToResult()
 

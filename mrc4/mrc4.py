@@ -6,10 +6,17 @@
         3. Feistel
 """
 
+from citra.Image_Stego import binstr2bin, file2bin, savefile, str2bin
+
+
 key = None
 
 def acquire_key(input_key):
     global key
+    if input_key == None or input_key == "":
+        # Default key (soalnya belum nambahin field key buat rc4 sendiri di stego)
+        key = "Stego"
+        return
     key = input_key
     # while key == None:
     #     key = input("Input key: \n>>> ")
@@ -24,30 +31,105 @@ def xor_message(message: str, keystream) -> str:
     """
     result = ""
     n_keystream = len(keystream)
-    message_ints = str_to_binaries(message)
+    message_ints = str_to_ints(message)
     for idx in range(len(message_ints)):
         result += chr(message_ints[idx] ^ keystream[idx%n_keystream])
     return result
 
-def str_to_binaries(input_text: str):
+def str_to_ints(input_text: str):
+    """
+        Converts string to list of ints, where each char in string is mapped to its int ASCII value
+    """
     return [ord(char) for char in input_text]
 
-def str_to_strbinaries(input_text: str):
+def str_to_strbinaries(input_text: str) -> str:
     """
         Converts string to its binary representation
         Example:
         'abcd' --> '01100001011000100110001101100100'
     """
-    temp = [bin(bits)[2:] for bits in [ord(char) for char in input_text]]
-    result = []
-    for e in temp:
-        if len(e) < 8:
-            e = (8 - len(e)) * "0" + e
-        result.append(e)
+    result = ""
+    for char in input_text:
+        result += format(ord(char), "08b")
     return "".join(result)
 
+def strbinaries_to_char(content) -> str:
+    """
+        [DESC]
+            Mengkonversi list of str yang merepresentasikan binary ke text/string
+        [PARAMS]
+            content: list[str]      { list of str. String merupakan binary representation dalam format 1 byte
+                                    sehingga len(content) merupakan kelipatan 8 }
+    """
+    result = ""
+    for i in range(len(content)//8):
+        byte = content[i*8 : (i+1)*8]
+        result += chr(int(byte, 2))
+    return result
 
-def feistel(input_message: str, input_key: str, encrypt: bool, num_of_steps: int = 2) -> str:
+def cr4_convert_char_to_binstr(content):
+    """
+        [DESC]
+            Mengkonversi str text ke list of str yang merepresentasikan binary setiap char
+            Contoh:
+            'abcd' --> ['01100001', '01100010', '01100011', 01100100']
+        [PARAMS]
+            content: str      { text yang ingin diubah ke list of str dalam representasi binary 1 byte }
+    """
+    result = []
+    for char in content:
+        result.append(format(ord(char), "08b"))
+    return result
+
+def cr4_encrypt_message(message):
+    """
+        [DESC]
+            Menerima message untuk dienkripsi sebelum di-passing kepada algoritma stego image
+        [PARAMS]
+            message: string yang merepresentasikan binary dari file (e.g. 0010010101...)
+        [RETURN]
+            Hasil enkripsi message dengan Modified RC4 dalam format yang sama dengan input
+    """
+    global key
+    
+    # Convert string of binary representation to string of char
+    message_text = strbinaries_to_char(message)
+    
+    # Encrypt
+    enc_message_text = encrypt_text(message_text)
+
+    # Convert string of char to string of binary representation
+    enc_message = str_to_strbinaries(enc_message_text)
+
+    return enc_message
+
+def cr4_decrypt_file(filename, extension):
+    """
+        [DESC]
+            Membaca file output hasil ekstraksi steganografi, lalu didekripsi dengan algoritma Modified RC4
+            Hasilnya di-write menjadi file dengan nama dan ekstensi yang sama
+        [PARAMS]
+            filename: str   { nama file output hasil ekstraksi steganografi }
+            extension: str  { ekstensi file output hasil ekstraksi steganografi }
+    """
+    # Read file
+    path = "output_decode/" + filename + "." + extension
+    content_binstr = file2bin(path)
+
+    # Convert file content into string of char
+    content_text = strbinaries_to_char(content_binstr)
+
+    # Decrypt
+    content_text = decrypt_text(content_text)
+
+    # Convert string of char to binary
+    decr_content = binstr2bin(str2bin(content_text))
+
+    # Write file
+    savefile(decr_content, filename, extension)
+
+
+def feistel(input_message: str, input_key: str, encrypt: bool, num_of_steps: int = 3) -> str:
     """
         [DESC]
             Melakukan enkripsi dengan Feistel Network menggunakan fungsi
@@ -83,7 +165,7 @@ def feistel(input_message: str, input_key: str, encrypt: bool, num_of_steps: int
         func_result = xor_message(subpart2, keystream_i)
 
         # XOR the result with subpart1
-        xor_result = xor_message(subpart1, str_to_binaries(func_result))
+        xor_result = xor_message(subpart1, str_to_ints(func_result))
         
         subpart1, subpart2 = subpart2, xor_result
         

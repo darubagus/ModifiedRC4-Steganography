@@ -36,6 +36,17 @@ Semester I Tahun 2021/2022
   $pip3 install wave
   $pip3 install librosa
 ```
+
+**Atau**, pada direktori project, setup virtual environment dengan virtualenv.
+```
+virtualenv venv
+.\venv\Scripts\activate
+```
+Lalu install dependencies yang tertera pada requirements.txt
+```
+pip install -r requirements.txt
+```
+
 ## Executing The Program
 ```
   $python3 main2.py
