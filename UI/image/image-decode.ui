@@ -57,7 +57,7 @@ font-weight: bold;
     <property name="geometry">
      <rect>
       <x>340</x>
-      <y>420</y>
+      <y>370</y>
       <width>161</width>
       <height>51</height>
      </rect>
@@ -76,7 +76,7 @@ border-radius: 25px;
     <property name="geometry">
      <rect>
       <x>110</x>
-      <y>190</y>
+      <y>200</y>
       <width>101</width>
       <height>20</height>
      </rect>
@@ -97,7 +97,7 @@ color: rgb(116, 116, 118);</string>
     <property name="geometry">
      <rect>
       <x>320</x>
-      <y>180</y>
+      <y>190</y>
       <width>341</width>
       <height>31</height>
      </rect>
@@ -116,7 +116,7 @@ color: rgb(116, 116, 118);
     <property name="geometry">
      <rect>
       <x>320</x>
-      <y>270</y>
+      <y>230</y>
       <width>201</width>
       <height>31</height>
      </rect>
@@ -128,57 +128,11 @@ color: rgb(116, 116, 118);
 </string>
     </property>
    </widget>
-   <widget class="QRadioButton" name="insButton_2">
-    <property name="geometry">
-     <rect>
-      <x>450</x>
-      <y>230</y>
-      <width>101</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">font: 15pt &quot;Product Sans&quot;;
-background-color: rgba(255, 255, 255, 0);
-border-radius: 4px;
-color: rgb(96, 99, 103);
-</string>
-    </property>
-    <property name="text">
-     <string>Random</string>
-    </property>
-    <attribute name="buttonGroup">
-     <string notr="true">buttonGroup_2</string>
-    </attribute>
-   </widget>
-   <widget class="QRadioButton" name="insButton_1">
-    <property name="geometry">
-     <rect>
-      <x>340</x>
-      <y>230</y>
-      <width>101</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">font: 15pt &quot;Product Sans&quot;;
-border-radius: 4px;
-color: rgb(96, 99, 103);
-background-color: rgba(255, 255, 255, 0);
-</string>
-    </property>
-    <property name="text">
-     <string>Sequential</string>
-    </property>
-    <attribute name="buttonGroup">
-     <string notr="true">buttonGroup_2</string>
-    </attribute>
-   </widget>
    <widget class="QLineEdit" name="outputFileField">
     <property name="geometry">
      <rect>
       <x>320</x>
-      <y>310</y>
+      <y>270</y>
       <width>201</width>
       <height>31</height>
      </rect>
@@ -194,7 +148,7 @@ color: rgb(116, 116, 118);
     <property name="geometry">
      <rect>
       <x>540</x>
-      <y>310</y>
+      <y>270</y>
       <width>121</width>
       <height>31</height>
      </rect>
@@ -210,7 +164,7 @@ color: rgb(116, 116, 118);
     <property name="geometry">
      <rect>
       <x>670</x>
-      <y>180</y>
+      <y>190</y>
       <width>71</width>
       <height>31</height>
      </rect>
@@ -229,7 +183,7 @@ border-radius: 15px;
     <property name="geometry">
      <rect>
       <x>520</x>
-      <y>320</y>
+      <y>280</y>
       <width>21</width>
       <height>20</height>
      </rect>
@@ -250,7 +204,7 @@ color: rgb(116, 116, 118);</string>
     <property name="geometry">
      <rect>
       <x>340</x>
-      <y>360</y>
+      <y>320</y>
       <width>101</width>
       <height>20</height>
      </rect>
@@ -273,8 +227,8 @@ background-color: rgba(255, 255, 255, 0);
     <property name="geometry">
      <rect>
       <x>450</x>
-      <y>360</y>
-      <width>101</width>
+      <y>320</y>
+      <width>51</width>
       <height>20</height>
      </rect>
     </property>
@@ -292,32 +246,11 @@ color: rgb(96, 99, 103);
      <string notr="true">buttonGroup_3</string>
     </attribute>
    </widget>
-   <widget class="QLabel" name="label_9">
-    <property name="geometry">
-     <rect>
-      <x>110</x>
-      <y>230</y>
-      <width>171</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 255, 255, 0);
-font: 15pt &quot;Product Sans&quot;;
-color: rgb(116, 116, 118);</string>
-    </property>
-    <property name="text">
-     <string>Insertion method</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-    </property>
-   </widget>
    <widget class="QLabel" name="label_10">
     <property name="geometry">
      <rect>
       <x>110</x>
-      <y>270</y>
+      <y>240</y>
       <width>171</width>
       <height>20</height>
      </rect>
@@ -328,7 +261,7 @@ font: 15pt &quot;Product Sans&quot;;
 color: rgb(116, 116, 118);</string>
     </property>
     <property name="text">
-     <string>Stego-key (integer only)</string>
+     <string>Stego-key (optional)</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -338,7 +271,7 @@ color: rgb(116, 116, 118);</string>
     <property name="geometry">
      <rect>
       <x>110</x>
-      <y>320</y>
+      <y>280</y>
       <width>181</width>
       <height>20</height>
      </rect>
@@ -359,28 +292,7 @@ color: rgb(116, 116, 118);</string>
     <property name="geometry">
      <rect>
       <x>300</x>
-      <y>190</y>
-      <width>16</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 255, 255, 0);
-font: 15pt &quot;Product Sans&quot;;
-color: rgb(116, 116, 118);</string>
-    </property>
-    <property name="text">
-     <string>:</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_16">
-    <property name="geometry">
-     <rect>
-      <x>300</x>
-      <y>230</y>
+      <y>200</y>
       <width>16</width>
       <height>20</height>
      </rect>
@@ -401,7 +313,7 @@ color: rgb(116, 116, 118);</string>
     <property name="geometry">
      <rect>
       <x>300</x>
-      <y>280</y>
+      <y>240</y>
       <width>16</width>
       <height>20</height>
      </rect>
@@ -422,7 +334,7 @@ color: rgb(116, 116, 118);</string>
     <property name="geometry">
      <rect>
       <x>300</x>
-      <y>320</y>
+      <y>280</y>
       <width>16</width>
       <height>20</height>
      </rect>
@@ -443,7 +355,7 @@ color: rgb(116, 116, 118);</string>
     <property name="geometry">
      <rect>
       <x>110</x>
-      <y>360</y>
+      <y>320</y>
       <width>181</width>
       <height>20</height>
      </rect>
@@ -464,7 +376,7 @@ color: rgb(116, 116, 118);</string>
     <property name="geometry">
      <rect>
       <x>300</x>
-      <y>360</y>
+      <y>320</y>
       <width>16</width>
       <height>20</height>
      </rect>
@@ -485,7 +397,7 @@ color: rgb(116, 116, 118);</string>
     <property name="geometry">
      <rect>
       <x>390</x>
-      <y>470</y>
+      <y>420</y>
       <width>71</width>
       <height>31</height>
      </rect>
@@ -506,7 +418,7 @@ border-radius: 15px;
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="buttonGroup_3"/>
   <buttongroup name="buttonGroup_2"/>
+  <buttongroup name="buttonGroup_3"/>
  </buttongroups>
 </ui>

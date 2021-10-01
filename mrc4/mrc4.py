@@ -8,10 +8,11 @@
 
 key = None
 
-def acquire_key():
+def acquire_key(input_key):
     global key
-    while key == None:
-        key = input("Input key: \n>>> ")
+    key = input_key
+    # while key == None:
+    #     key = input("Input key: \n>>> ")
     
     # convert key to binary
     # key = "".join(str_to_strbinaries(key))
@@ -46,7 +47,7 @@ def str_to_strbinaries(input_text: str):
     return "".join(result)
 
 
-def feistel(input_message: str, input_key: str, encrypt: bool, num_of_steps: int = 3) -> str:
+def feistel(input_message: str, input_key: str, encrypt: bool, num_of_steps: int = 2) -> str:
     """
         [DESC]
             Melakukan enkripsi dengan Feistel Network menggunakan fungsi
@@ -66,8 +67,29 @@ def feistel(input_message: str, input_key: str, encrypt: bool, num_of_steps: int
         n_key_part = n_key//num_of_steps
     subpart1 = input_message[:n_message_part]
     subpart2 = input_message[n_message_part:]
-    print(input_key)
 
+    if encrypt:
+        iterate_key = range(num_of_steps)
+    else:
+        iterate_key = range(num_of_steps)[::-1]
+
+    for i in iterate_key:
+        # get the i-th subkey, i.e. the i-th substring of key
+        subkey_i = input_key[i*n_key_part:(i+1)*n_key_part]
+
+        # function f(subkey_i, subpart2)
+        # generate keystream for subpart 2, then XOR
+        keystream_i = lfsr_txt(subpart2, subkey_i)
+        func_result = xor_message(subpart2, keystream_i)
+
+        # XOR the result with subpart1
+        xor_result = xor_message(subpart1, str_to_binaries(func_result))
+        
+        subpart1, subpart2 = subpart2, xor_result
+        
+    subpart1, subpart2 = subpart2, subpart1
+
+    """
     if encrypt:
         for i in range(num_of_steps):
             # get the i-th subkey, i.e. the i-th substring of key
@@ -82,7 +104,11 @@ def feistel(input_message: str, input_key: str, encrypt: bool, num_of_steps: int
             xor_result = xor_message(subpart1, str_to_binaries(func_result))
             
             subpart1, subpart2 = subpart2, xor_result
+            
+        subpart1, subpart2 = subpart2, subpart1
+        
     else:
+        # subpart1, subpart2 = subpart2, subpart1
         for i in range(num_of_steps)[::-1]:
             # get the i-th subkey, i.e. the i-th substring of key
             subkey_i = input_key[i*n_key_part:(i+1)*n_key_part]
@@ -96,9 +122,10 @@ def feistel(input_message: str, input_key: str, encrypt: bool, num_of_steps: int
             xor_result = xor_message(subpart1, str_to_binaries(func_result))
             
             subpart1, subpart2 = subpart2, xor_result
+        
+        subpart1, subpart2 = subpart2, subpart1
+    """
     
-    subpart1, subpart2 = subpart2, subpart1
-
     return subpart1 + subpart2
 
 def lfsr_txt(input_message: str, subkey: str):
@@ -138,7 +165,8 @@ def readfile_txt(filename: str = "plaintext.txt"):
         Reads file and return the content (string)
     """
     from pathlib import Path
-    path = Path(__file__).parent / f"dump/{filename}"
+    # path = Path(__file__).parent / f"../{filename}"
+    path = filename
     
     with open(path, "r") as file:
         return file.readlines()
@@ -148,7 +176,8 @@ def writefile_txt(filename: str="output.txt", content:str=""):
         Writes content (string) to file
     """
     from pathlib import Path
-    path = Path(__file__).parent / f"dump/{filename}"
+    # path = Path(__file__).parent / f"../{filename}"
+    path = filename
 
     with open(path, 'wb') as file:
         file.write(content)
@@ -158,21 +187,21 @@ def readfile_bin(filename: str = "blue.png"):
         Reads file and return the content (binary)
     """
     from pathlib import Path
-    path = Path(__file__).parent / f"dump/{filename}"
+    path = filename
     
     with open(path, 'rb') as file:
         temp = []
-        while (byte := file.read(1)):
+        byte = file.read(1)
+        while byte:
             temp.append(int.from_bytes(byte, "big"))
+            byte = file.read(1)
         
         temp = [bin(bits)[2:] for bits in temp]
-        print(f"temp: {temp}")
         result = []
         for e in temp:
             if len(e) < 8:
                 e = (8 - len(e)) * "0" + e
             result.append(e)
-        print(f"result: {result}")
         
         return "".join([chr(int(e, 2)) for e in result])
 
@@ -181,7 +210,8 @@ def writefile_bin(filename: str="output.png", content: str=""):
         Writes contents (binary) into file
     """
     from pathlib import Path
-    path = Path(__file__).parent / f"dump/{filename}"
+    # path = Path(__file__).parent / f"../{filename}"
+    path = filename
     
     with open(path, 'wb') as file:
         bytes = []
@@ -204,7 +234,7 @@ def initializeS(key: str):
         temp[i], temp[j] = temp[j], temp[i]
     return temp
 
-def encrypt_text(P: str, S) -> str:
+def encrypt_text(P: str) -> str:
     """
         [DESC]
             Encrypt a plaintext P with respect to the permutation array S, according to the RC4 algorithm
@@ -215,6 +245,8 @@ def encrypt_text(P: str, S) -> str:
         [RETURN]
             Ciphertext as the result of RC4 and then Feister
     """
+    global key
+    S = initializeS(key)
     i = j = 0
     C = ""
     for idx in range(len(P)):
@@ -227,11 +259,10 @@ def encrypt_text(P: str, S) -> str:
         C += chr(c_bytes)
     
     # Feistel here
-    global key
-    C = feistel(C, str_to_strbinaries(key), True)
+    C = feistel(C, str_to_strbinaries(key), encrypt=True)
     return C
 
-def decrypt_text(C: str, S) -> str:
+def decrypt_text(C: str) -> str:
     """
         [DESC]
             Decrypt the ciphertext with Feister algorithm
@@ -242,9 +273,10 @@ def decrypt_text(C: str, S) -> str:
         [RETURN]
             Plaintext as the result of Feister and then RC4
     """
-    # Feistel here
     global key
-    C = feistel(C, str_to_strbinaries(key), False)
+    S = initializeS(key)
+    # Feistel here
+    C = feistel(C, str_to_strbinaries(key), encrypt=False)
 
     i = j = 0
     P = ""
@@ -269,20 +301,22 @@ def main():
 
     if mode == "1":
         message = "Decryption Process \
-            The process of decryption in Feistel cipher is almost similar. Instead of starting with a block of plaintext, the ciphertext block is fed into the start of the Feistel structure and then the process thereafter is exactly the same as described in the given illustration. \
-            The process is said to be almost similar and not exactly same. In the case of decryption, the only difference is that the subkeys used in encryption are used in the reverse order. \
-            The final swapping of ‘L’ and ‘R’ in last step of the Feistel Cipher is essential. If these are not swapped then the resulting ciphertext could not be decrypted using the same algorithm."
+The process of decryption in Feistel cipher is almost similar. Instead of starting with a block of plaintext, the ciphertext block is fed into the start of the Feistel structure and then the process thereafter is exactly the same as described in the given illustration. \
+The process is said to be almost similar and not exactly same. In the case of decryption, the only difference is that the subkeys used in encryption are used in the reverse order. \
+The final swapping of ‘L’ and ‘R’ in last step of the Feistel Cipher is essential. If these are not swapped then the resulting ciphertext could not be decrypted using the same algorithm."
         print("The message is:\n>>>", message, "<<<")
         while True:
-            acquire_key()
-            S = initializeS(key)
-            ciphertext = encrypt_text(message, S)
+            while key == None:
+                key = input("Input key: \n>>> ")
+            acquire_key(key)
+            ciphertext = encrypt_text(message)
             print("The encrypted message is:\n>>>", ciphertext, "<<<")
             key = None
 
-            acquire_key()
-            S = initializeS(key)
-            plaintext = decrypt_text(ciphertext, S)
+            while key == None:
+                key = input("Input key: \n>>> ")
+            acquire_key(key)
+            plaintext = decrypt_text(ciphertext)
             print("The decrypted message is:\n>>>", plaintext, "<<<")
             key = None
 
@@ -291,16 +325,18 @@ def main():
         message = readfile_bin()
         print("The message is:\n>>>", message, "<<<")
         while True:
-            acquire_key()
-            S = initializeS(key)
-            ciphertext = encrypt_text(message, S)
+            while key == None:
+                key = input("Input key: \n>>> ")
+            acquire_key(key)
+            ciphertext = encrypt_text(message)
             print("The encrypted message is:\n>>>", ciphertext, "<<<")
             key = None
             writefile_bin(filename="output.png", content=ciphertext)
 
-            acquire_key()
-            S = initializeS(key)
-            plaintext = decrypt_text(ciphertext, S)
+            while key == None:
+                key = input("Input key: \n>>> ")
+            acquire_key(key)
+            plaintext = decrypt_text(ciphertext)
             print("The decrypted message is:\n>>>", plaintext, "<<<")
             key = None
             writefile_bin(filename="output.png", content=plaintext)

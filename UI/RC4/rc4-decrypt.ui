@@ -47,7 +47,7 @@ font-weight: bold;
 </string>
     </property>
     <property name="text">
-     <string>Encoding</string>
+     <string>Decrypt</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -57,7 +57,7 @@ font-weight: bold;
     <property name="geometry">
      <rect>
       <x>340</x>
-      <y>500</y>
+      <y>390</y>
       <width>161</width>
       <height>51</height>
      </rect>
@@ -69,28 +69,7 @@ border-radius: 25px;
 </string>
     </property>
     <property name="text">
-     <string>Encode!</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_4">
-    <property name="geometry">
-     <rect>
-      <x>110</x>
-      <y>120</y>
-      <width>101</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 255, 255, 0);
-font: 15pt &quot;Product Sans&quot;;
-color: rgb(116, 116, 118);</string>
-    </property>
-    <property name="text">
-     <string>Image vessel</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+     <string>Decrypt!</string>
     </property>
    </widget>
    <widget class="QRadioButton" name="inputButton_1">
@@ -142,25 +121,6 @@ color: rgb(96, 99, 103);
      <string notr="true">buttonGroup</string>
     </attribute>
    </widget>
-   <widget class="QLineEdit" name="vesselField">
-    <property name="geometry">
-     <rect>
-      <x>320</x>
-      <y>110</y>
-      <width>341</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">border-radius: 2px;
-padding-left: 10px;
-color: rgb(116, 116, 118);
-</string>
-    </property>
-    <property name="readOnly">
-     <bool>true</bool>
-    </property>
-   </widget>
    <widget class="QLineEdit" name="inputFileField">
     <property name="geometry">
      <rect>
@@ -184,7 +144,7 @@ color: rgb(116, 116, 118);
     <property name="geometry">
      <rect>
       <x>320</x>
-      <y>350</y>
+      <y>290</y>
       <width>201</width>
       <height>31</height>
      </rect>
@@ -234,57 +194,11 @@ border-radius: 15px;
      <string>Choose</string>
     </property>
    </widget>
-   <widget class="QRadioButton" name="insButton_2">
-    <property name="geometry">
-     <rect>
-      <x>450</x>
-      <y>310</y>
-      <width>101</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">font: 15pt &quot;Product Sans&quot;;
-background-color: rgba(255, 255, 255, 0);
-border-radius: 4px;
-color: rgb(96, 99, 103);
-</string>
-    </property>
-    <property name="text">
-     <string>Random</string>
-    </property>
-    <attribute name="buttonGroup">
-     <string notr="true">buttonGroup_2</string>
-    </attribute>
-   </widget>
-   <widget class="QRadioButton" name="insButton_1">
-    <property name="geometry">
-     <rect>
-      <x>340</x>
-      <y>310</y>
-      <width>101</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">font: 15pt &quot;Product Sans&quot;;
-border-radius: 4px;
-color: rgb(96, 99, 103);
-background-color: rgba(255, 255, 255, 0);
-</string>
-    </property>
-    <property name="text">
-     <string>Sequential</string>
-    </property>
-    <attribute name="buttonGroup">
-     <string notr="true">buttonGroup_2</string>
-    </attribute>
-   </widget>
    <widget class="QLineEdit" name="outputFileField">
     <property name="geometry">
      <rect>
       <x>320</x>
-      <y>390</y>
+      <y>330</y>
       <width>201</width>
       <height>31</height>
      </rect>
@@ -300,7 +214,7 @@ color: rgb(116, 116, 118);
     <property name="geometry">
      <rect>
       <x>540</x>
-      <y>390</y>
+      <y>330</y>
       <width>121</width>
       <height>31</height>
      </rect>
@@ -312,30 +226,11 @@ color: rgb(116, 116, 118);
 </string>
     </property>
    </widget>
-   <widget class="QPushButton" name="vesselButton">
-    <property name="geometry">
-     <rect>
-      <x>670</x>
-      <y>110</y>
-      <width>71</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">font: 15pt &quot;Product Sans&quot;;
-color: rgb(96, 99, 103);
-border-radius: 15px;
-</string>
-    </property>
-    <property name="text">
-     <string>Choose</string>
-    </property>
-   </widget>
    <widget class="QLabel" name="label_5">
     <property name="geometry">
      <rect>
       <x>520</x>
-      <y>400</y>
+      <y>340</y>
       <width>21</width>
       <height>20</height>
      </rect>
@@ -351,52 +246,6 @@ color: rgb(116, 116, 118);</string>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
     </property>
-   </widget>
-   <widget class="QRadioButton" name="encButton_1">
-    <property name="geometry">
-     <rect>
-      <x>340</x>
-      <y>440</y>
-      <width>101</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">font: 15pt &quot;Product Sans&quot;;
-border-radius: 4px;
-color: rgb(96, 99, 103);
-background-color: rgba(255, 255, 255, 0);
-</string>
-    </property>
-    <property name="text">
-     <string>Yes</string>
-    </property>
-    <attribute name="buttonGroup">
-     <string notr="true">buttonGroup_3</string>
-    </attribute>
-   </widget>
-   <widget class="QRadioButton" name="encButton_2">
-    <property name="geometry">
-     <rect>
-      <x>450</x>
-      <y>440</y>
-      <width>101</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">font: 15pt &quot;Product Sans&quot;;
-background-color: rgba(255, 255, 255, 0);
-border-radius: 4px;
-color: rgb(96, 99, 103);
-</string>
-    </property>
-    <property name="text">
-     <string>No</string>
-    </property>
-    <attribute name="buttonGroup">
-     <string notr="true">buttonGroup_3</string>
-    </attribute>
    </widget>
    <widget class="QLabel" name="label_6">
     <property name="geometry">
@@ -461,32 +310,11 @@ color: rgb(116, 116, 118);</string>
      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
     </property>
    </widget>
-   <widget class="QLabel" name="label_9">
-    <property name="geometry">
-     <rect>
-      <x>110</x>
-      <y>310</y>
-      <width>171</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 255, 255, 0);
-font: 15pt &quot;Product Sans&quot;;
-color: rgb(116, 116, 118);</string>
-    </property>
-    <property name="text">
-     <string>Insertion method</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-    </property>
-   </widget>
    <widget class="QLabel" name="label_10">
     <property name="geometry">
      <rect>
       <x>110</x>
-      <y>350</y>
+      <y>300</y>
       <width>171</width>
       <height>20</height>
      </rect>
@@ -497,7 +325,7 @@ font: 15pt &quot;Product Sans&quot;;
 color: rgb(116, 116, 118);</string>
     </property>
     <property name="text">
-     <string>Stego-key</string>
+     <string>Key</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -507,7 +335,7 @@ color: rgb(116, 116, 118);</string>
     <property name="geometry">
      <rect>
       <x>110</x>
-      <y>400</y>
+      <y>340</y>
       <width>181</width>
       <height>20</height>
      </rect>
@@ -566,27 +394,6 @@ color: rgb(116, 116, 118);</string>
      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
     </property>
    </widget>
-   <widget class="QLabel" name="label_14">
-    <property name="geometry">
-     <rect>
-      <x>300</x>
-      <y>120</y>
-      <width>16</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 255, 255, 0);
-font: 15pt &quot;Product Sans&quot;;
-color: rgb(116, 116, 118);</string>
-    </property>
-    <property name="text">
-     <string>:</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-    </property>
-   </widget>
    <widget class="QLabel" name="label_15">
     <property name="geometry">
      <rect>
@@ -608,32 +415,11 @@ color: rgb(116, 116, 118);</string>
      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
     </property>
    </widget>
-   <widget class="QLabel" name="label_16">
-    <property name="geometry">
-     <rect>
-      <x>300</x>
-      <y>310</y>
-      <width>16</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 255, 255, 0);
-font: 15pt &quot;Product Sans&quot;;
-color: rgb(116, 116, 118);</string>
-    </property>
-    <property name="text">
-     <string>:</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-    </property>
-   </widget>
    <widget class="QLabel" name="label_17">
     <property name="geometry">
      <rect>
       <x>300</x>
-      <y>360</y>
+      <y>300</y>
       <width>16</width>
       <height>20</height>
      </rect>
@@ -654,49 +440,7 @@ color: rgb(116, 116, 118);</string>
     <property name="geometry">
      <rect>
       <x>300</x>
-      <y>400</y>
-      <width>16</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 255, 255, 0);
-font: 15pt &quot;Product Sans&quot;;
-color: rgb(116, 116, 118);</string>
-    </property>
-    <property name="text">
-     <string>:</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_19">
-    <property name="geometry">
-     <rect>
-      <x>110</x>
-      <y>440</y>
-      <width>181</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 255, 255, 0);
-font: 15pt &quot;Product Sans&quot;;
-color: rgb(116, 116, 118);</string>
-    </property>
-    <property name="text">
-     <string>Encrypt message</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_20">
-    <property name="geometry">
-     <rect>
-      <x>300</x>
-      <y>440</y>
+      <y>340</y>
       <width>16</width>
       <height>20</height>
      </rect>
@@ -717,7 +461,7 @@ color: rgb(116, 116, 118);</string>
     <property name="geometry">
      <rect>
       <x>390</x>
-      <y>550</y>
+      <y>440</y>
       <width>71</width>
       <height>31</height>
      </rect>
@@ -738,8 +482,6 @@ border-radius: 15px;
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="buttonGroup_2"/>
-  <buttongroup name="buttonGroup_3"/>
   <buttongroup name="buttonGroup"/>
  </buttongroups>
 </ui>
